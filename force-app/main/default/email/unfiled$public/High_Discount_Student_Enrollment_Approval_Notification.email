@@ -1,0 +1,20 @@
+Hello {!Student_Enrollment__c.OwnerFullName},
+
+A student enrollment with a high discount has been submitted for your approval.
+
+Enrollment Details:
+
+Student Name: {!Student_Enrollment__c.Student__r.Name}
+
+Course Name: {!Student_Enrollment__c.Course__r.Name}
+
+Course Fee: {!Student_Enrollment__c.Course__r.Course_Fee__c}
+
+Discount Percentage: {!Student_Enrollment__c.Discount_Percentage__c}%
+
+Final Payable Amount: {!Student_Enrollment__c.Final_Payable_Amount__c}
+
+Please review the enrollment details and approve or reject the request accordingly.
+
+Thank you,
+Student Admissions Approval System

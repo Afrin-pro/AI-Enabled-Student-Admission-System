@@ -1,0 +1,18 @@
+Hello {!Student_Enrollment__c.OwnerFullName},
+
+The approval process for a student enrollment has been completed.
+
+Enrollment Summary:
+
+Student Name: {!Student_Enrollment__c.Student__r.Name}
+
+Course Name: {!Student_Enrollment__c.Course__r.Name}
+
+Approval Status: {!Student_Enrollment__c.Approval_Status__c}
+
+Final Payable Amount: {!Student_Enrollment__c.Final_Payable_Amount__c}
+
+Please proceed with the next steps in the admission process based on the approval outcome.
+
+Thank you,
+Student Admissions Management System

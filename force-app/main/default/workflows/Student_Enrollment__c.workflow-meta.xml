@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>High_Discount_Enrollment_Approval_Email_Alert</fullName>
+        <description>High Discount Enrollment Approval Email Alert</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>pixie@mbu.asia</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/High_Discount_Student_Enrollment_Approval_Notification</template>
+    </alerts>
+    <alerts>
+        <fullName>High_Priority_Student_Application_Email_Alert</fullName>
+        <description>High Priority Student Application Email Alert</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/High_Priority_Student_Application_Notification</template>
+    </alerts>
+    <alerts>
+        <fullName>Student_Enrollment_Approval_Status_Email_Alert</fullName>
+        <description>Student Enrollment Approval Status Email Alert</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>anamsana@gmail.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Student_Enrollment_Approval_Status_Notification</template>
+    </alerts>
+</Workflow>
