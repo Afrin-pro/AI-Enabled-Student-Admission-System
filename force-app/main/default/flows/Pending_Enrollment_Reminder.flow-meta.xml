@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Pending_Enrollment_Reminder</name>
+        <label>Pending Enrollment Reminder</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>Student_Enrollment__c.Student_Enrollment_Approval_Status_Email_Alert</actionName>
+        <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+                <inputConfiguratorMode>Resource</inputConfiguratorMode>
+            </value>
+        </inputParameters>
+        <nameSegment>Student_Enrollment__c.Student_Enrollment_Approval_Status_Email_Alert</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Older_Than_2_Days</name>
+        <label>Older Than 2 Days</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Pending_Enrollment_Reminder</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Pending_More_Than_2_Days</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.LastModifiedDate</leftValueReference>
+                <operator>LessThan</operator>
+                <rightValue>
+                    <elementReference>TwoDaysAgo</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Pending_Enrollment_Reminder</targetReference>
+            </connector>
+            <label>Pending More Than 2 Days</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>TwoDaysAgo</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW() - 2</expression>
+    </formulas>
+    <interviewLabel>Pending Enrollment Reminder {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Pending Enrollment Reminder</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Older_Than_2_Days</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Approval_Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Pending</stringValue>
+            </value>
+        </filters>
+        <object>Student_Enrollment__c</object>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2026-07-04</startDate>
+            <startTime>09:00:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
