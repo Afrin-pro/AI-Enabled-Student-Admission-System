@@ -2,6 +2,22 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Set_Discount_on_Student</name>
+        <label>Set Discount on Student</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Student.Discount_Percentage__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>DiscountPercentage</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Create_Student_Enrollment</targetReference>
+        </connector>
+    </assignments>
     <customProperties>
         <name>ScreenProgressIndicator</name>
         <value>
@@ -50,10 +66,31 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Confirmation</targetReference>
+            <targetReference>Get_Created_Enrollment</targetReference>
         </connector>
         <inputReference>Student</inputReference>
     </recordCreates>
+    <recordLookups>
+        <name>Get_Created_Enrollment</name>
+        <label>Get Created Enrollment</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Confirmation</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Student.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Student_Enrollment__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <recordLookups>
         <name>Get_Selected_Course</name>
         <label>Get Selected Course</label>
@@ -85,7 +122,7 @@
         <allowPause>true</allowPause>
         <fields>
             <name>confirmation_screen</name>
-            <fieldText>&lt;p&gt;✅ Enrollment Created Successfully!&lt;/p&gt;&lt;p&gt;Final Payable Amount: {!FinalPayableAmount}&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;Enrollment Created Successfully!&amp;nbsp;&lt;/p&gt;&lt;p&gt;{!Get_Created_Enrollment.Final_Payable_Amount__c}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -108,7 +145,7 @@
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
         <connector>
-            <targetReference>Create_Student_Enrollment</targetReference>
+            <targetReference>Set_Discount_on_Student</targetReference>
         </connector>
         <fields>
             <name>DiscountPercentage</name>
