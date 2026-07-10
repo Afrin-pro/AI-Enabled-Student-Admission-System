@@ -1,0 +1,31 @@
+{
+  "required" : [ "Input:Student_Enrollment__c" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Input:Student_Enrollment__c" : {
+      "title" : "objectToSummarize",
+      "description" : "The Student Enrollment record to summarize",
+      "lightning:type" : "lightning__recordInfoType",
+      "lightning:sObjectInfo" : {
+        "apiName" : "Student_Enrollment__c"
+      },
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "outputLanguage" : {
+      "title" : "Output language",
+      "description" : "Optional. Specify the response language using the appropriate two-character language code or five-character locale code (for example, en_US, en_GB, es, es_MX).",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "isPreviewOnly" : {
+      "title" : "Preview Only",
+      "description" : "Internal flag. When true, resolves the prompt without calling the LLM. Leave unchecked — this stays false for normal use.",
+      "lightning:type" : "lightning__booleanType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

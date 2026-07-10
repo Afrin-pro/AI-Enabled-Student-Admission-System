@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>L3Xpbt0NDJfSsL/DfRmHT7+imgU+p9Z849UjDxneZxQ=_1</activeVersionIdentifier>
+    <developerName>Student_Application_Summary_Prompt</developerName>
+    <masterLabel>Student Application Summary Prompt</masterLabel>
+    <overridable>false</overridable>
+    <relatedEntity>Student_Enrollment__c</relatedEntity>
+    <templateVersions>
+        <content>Summarize this student&apos;s application in simple, plain-language terms. Include: - Student name: {!$Input:Student_Enrollment__c.Student__r.LastName}
+Course applied: {!$Input:Student_Enrollment__c.Course__r.Name}
+Course fee and discount: {!$Input:Student_Enrollment__c.Course__r.Course_Fee__c} with a discount of {!$Input:Student_Enrollment__c.Discount_Percentage__c}
+- Final payable amount: {!$Input:Student_Enrollment__c.Final_Payable_Amount__c}
+- Enrollment status: {!$Input:Student_Enrollment__c.Enrollment_Status__c}
+- AI priority score: {!$Input:Student_Enrollment__c.AI_Priority_Score__c}
+Then highlight any risks or special considerations a counselor should be aware of.
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>objectToSummarize</apiName>
+            <definition>SOBJECT://Student_Enrollment__c</definition>
+            <referenceName>Input:Student_Enrollment__c</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <status>Published</status>
+        <versionIdentifier>L3Xpbt0NDJfSsL/DfRmHT7+imgU+p9Z849UjDxneZxQ=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__recordSummary</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

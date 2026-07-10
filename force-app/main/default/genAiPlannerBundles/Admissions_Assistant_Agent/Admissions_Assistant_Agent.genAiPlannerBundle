@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <description>AI agent to assist counselors and managers with student admissions and approvals.</description>
+    <localActionLinks>
+        <genAiFunctionName>AnswerQuestionsWithKnowledge_16jdL000003G1fF</genAiFunctionName>
+    </localActionLinks>
+    <localTopicLinks>
+        <genAiPluginName>Enrollment_Application_Summary_16jdL000003G1fF</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Enrollment_Risk_Analysis_16jdL000003G1fF</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>GeneralFAQ_16jdL000003G1fF</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Student_Enrollment_Discount_Evaluation_16jdL000003G1fF</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>Enrollment_Risk_Analysis_16jdL000003G1fF</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handles requests to assess a student&apos;s overall admission probability and general enrollment health (Low/Medium/High Risk). Use for questions about whether an enrollment overall is safe to approve. Do not use for questions specifically about whether a discount amount should be approved — that&apos;s Discount Approval Guidance.</description>
+        <developerName>Enrollment_Risk_Analysis_16jdL000003G1fF</developerName>
+        <genAiPluginInstructions>
+            <description>Analyze the admission probability based on provided student enrollment data.</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Evaluate financial risk by considering the discount applied to the enrollment.</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Classify the overall enrollment health into Low, Medium, or High Risk categories.</description>
+            <developerName>instruction_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 3</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Provide an approve or reject recommendation based on the combined analysis of admission probability and financial risk.</description>
+            <developerName>instruction_4</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 4</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Ask for any missing or unclear information needed to complete the analysis.</description>
+            <developerName>instruction_5</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 5</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>QueryRecords_179dL000004ZXV3</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>Student_Enrollment_Risk_Analysis_Prompt_179dL000004ZXV3</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Student_Enrollment_Risk_Analysis_Prompt_179dL000004ZXV3</fullName>
+            <description>Analyzes a student enrollment&apos;s admission probability and financial risk based on discount, and classifies overall enrollment health as Low, Medium, or High Risk with an approve/reject recommendation.</description>
+            <developerName>Student_Enrollment_Risk_Analysis_Prompt_179dL000004ZXV3</developerName>
+            <invocationTarget>Student_Enrollment_Risk_Analysis_Prompt</invocationTarget>
+            <invocationTargetType>generatePromptResponse</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Student_Enrollment_Risk_Analysis_Prompt</localDeveloperName>
+            <masterLabel>Student Enrollment Risk Analysis Prompt</masterLabel>
+            <progressIndicatorMessage>Analyzing enrollment risk...</progressIndicatorMessage>
+        </localActions>
+        <localActions>
+            <fullName>QueryRecords_179dL000004ZXV3</fullName>
+            <description>Finds and retrieves Salesforce CRM records based on user input and specific conditions, such as field values. This action automatically identifies the correct records and object type. e.g. &apos;Find all open opportunities created in the last 5 days sorted by created date.&apos;</description>
+            <developerName>QueryRecords_179dL000004ZXV3</developerName>
+            <invocationTarget>queryRecords</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>QueryRecords</localDeveloperName>
+            <masterLabel>Query Records</masterLabel>
+            <source>EmployeeCopilot__QueryRecords</source>
+        </localActions>
+        <localDeveloperName>Enrollment_Risk_Analysis</localDeveloperName>
+        <masterLabel>Enrollment Risk Analysis</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>My job is to evaluate enrollment data to determine admission probability, assess financial risk based on discounts, and classify the overall enrollment health into risk categories with an approve or reject recommendation. I will not handle tasks outside of this specific analysis.</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>Enrollment_Application_Summary_16jdL000003G1fF</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Generates a plain-language summary of a student&apos;s enrollment application, including course fee, discount, final payable amount, enrollment status, and AI priority score, while highlighting any risks or special considerations for a counselor.</description>
+        <developerName>Enrollment_Application_Summary_16jdL000003G1fF</developerName>
+        <genAiPluginInstructions>
+            <description>Summarize the course fee, discount applied, and final payable amount based on the student&apos;s enrollment details.</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Include the enrollment status and AI priority score in the summary.</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Highlight any risks or special considerations that the counselor should be made aware of.</description>
+            <developerName>instruction_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 3</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Ensure the summary is clear, concise, and written in plain language.</description>
+            <developerName>instruction_4</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 4</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>QueryRecords_179dL000004Zn3Z</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>Application_Summary_Prompt_179dL000004Zn3Z</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Student_Application_Summary_Prompt_179dL000004Zn3Z</fullName>
+            <description>Generates a plain-language summary of a student&apos;s enrollment application, including course fee, discount, final payable amount, enrollment status, and AI priority score, and highlights any risks or special considerations a counselor should know.</description>
+            <developerName>Student_Application_Summary_Prompt_179dL000004Zn3Z</developerName>
+            <invocationTarget>Student_Application_Summary_Prompt</invocationTarget>
+            <invocationTargetType>generatePromptResponse</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Student_Application_Summary_Prompt</localDeveloperName>
+            <masterLabel>Student Application Summary Prompt</masterLabel>
+            <progressIndicatorMessage>Summarizing the student&apos;s application...</progressIndicatorMessage>
+        </localActions>
+        <localActions>
+            <fullName>QueryRecords_179dL000004Zn3Z</fullName>
+            <description>Finds and retrieves Salesforce CRM records based on user input and specific conditions, such as field values. This action automatically identifies the correct records and object type. e.g. &apos;Find all open opportunities created in the last 5 days sorted by created date.&apos;</description>
+            <developerName>QueryRecords_179dL000004Zn3Z</developerName>
+            <invocationTarget>queryRecords</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>QueryRecords</localDeveloperName>
+            <masterLabel>Query Records</masterLabel>
+            <source>EmployeeCopilot__QueryRecords</source>
+        </localActions>
+        <localActions>
+            <fullName>Application_Summary_Prompt_179dL000004Zn3Z</fullName>
+            <description>Generates a plain-language summary of a student&apos;s enrollment application, including course fee, discount, final payable amount, enrollment status, and AI priority score, and highlights any risks or special considerations a counselor should know.</description>
+            <developerName>Application_Summary_Prompt_179dL000004Zn3Z</developerName>
+            <invocationTarget>Student_Application_Summary_Prompt</invocationTarget>
+            <invocationTargetType>generatePromptResponse</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Application_Summary_Prompt</localDeveloperName>
+            <masterLabel>Application Summary Prompt</masterLabel>
+            <progressIndicatorMessage>Summarizing the student&apos;s application...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Enrollment_Application_Summary</localDeveloperName>
+        <masterLabel>Enrollment Application Summary</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>My job is to create a detailed summary of a student&apos;s enrollment application, capturing financial details, enrollment status, priority scores, and any notable risks or considerations for the counselor to review.</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>Student_Enrollment_Discount_Evaluation_16jdL000003G1fF</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handles requests specifically about a discount amount on a student enrollment — whether it&apos;s within an acceptable range and whether it should be approved, escalated, or rejected. Use whenever the word &quot;discount&quot; appears in the request. Do not use for general admission risk questions that aren&apos;t about the discount.</description>
+        <developerName>Student_Enrollment_Discount_Evaluation_16jdL000003G1fF</developerName>
+        <genAiPluginInstructions>
+            <description>Verify the discount percentage or amount applied to the enrollment against the acceptable range for the course fee.</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If the discount is within the acceptable range, recommend approval.</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If the discount exceeds the acceptable range, recommend escalation for further review.</description>
+            <developerName>instruction_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 3</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If the discount is invalid or does not meet the criteria, recommend rejection.</description>
+            <developerName>instruction_4</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 4</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Ensure to document the rationale for the recommendation in the response.</description>
+            <developerName>instruction_5</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 5</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>QueryRecords_179dL000004ZXWf</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>Approval_Decision_Recommendation_179dL000004ZXWf</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>QueryRecords_179dL000004ZXWf</fullName>
+            <description>Finds and retrieves Salesforce CRM records based on user input and specific conditions, such as field values. This action automatically identifies the correct records and object type. e.g. &apos;Find all open opportunities created in the last 5 days sorted by created date.&apos;</description>
+            <developerName>QueryRecords_179dL000004ZXWf</developerName>
+            <invocationTarget>queryRecords</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>QueryRecords</localDeveloperName>
+            <masterLabel>Query Records</masterLabel>
+            <source>EmployeeCopilot__QueryRecords</source>
+        </localActions>
+        <localActions>
+            <fullName>Approval_Decision_Recommendation_179dL000004ZXWf</fullName>
+            <description>Evaluates whether a student enrollment&apos;s discount is within an acceptable range against the course fee, and recommends Approve, Escalate for Review, or Reject.</description>
+            <developerName>Approval_Decision_Recommendation_179dL000004ZXWf</developerName>
+            <invocationTarget>Approval_Decision_Recommendation</invocationTarget>
+            <invocationTargetType>generatePromptResponse</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Approval_Decision_Recommendation</localDeveloperName>
+            <masterLabel>Approval Decision Recommendation</masterLabel>
+            <progressIndicatorMessage>Reviewing discount for approval...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Student_Enrollment_Discount_Evaluation</localDeveloperName>
+        <masterLabel>Student Enrollment Discount Evaluation</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>My job is to assess the discount applied to student enrollments, compare it against the acceptable range for the course fee, and provide a recommendation to approve, escalate for review, or reject the discount.</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>GeneralFAQ_16jdL000003G1fF</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handles general questions unrelated to a specific student&apos;s enrollment, application, risk, or discount — for example, how to use this agent. Do not use for any question about a specific student&apos;s application, fees, discount, risk, or approval status — route those to Student Application Summary, Enrollment Risk Analysis, or Discount Approval Guidance instead.</description>
+        <developerName>GeneralFAQ_16jdL000003G1fF</developerName>
+        <genAiPluginInstructions>
+            <description>If the customer&apos;s question is too vague or general, ask for more details and clarification to give a better answer.</description>
+            <developerName>requestmoredetails</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>request-more-details</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If you are unable to help the customer even after asking clarifying questions, ask if they want to escalate this issue to a live agent.</description>
+            <developerName>unabletohelpafterclarifying</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>unable-to-help-after-clarifying</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If you are unable to answer customer&apos;s questions, ask if they want to escalate this issue to a live agent.</description>
+            <developerName>unabletoanswerquestions</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>unable-to-answer-questions</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Never provide generic information, advice or troubleshooting steps, unless retrieved from searching knowledge articles.</description>
+            <developerName>avoidgenericinformation</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>avoid-generic-information</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Include sources in your response when available from the knowledge articles, otherwise proceed without them.</description>
+            <developerName>includearticlesources</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>include-article-sources</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>AnswerQuestionsWithKnowledge_179dL000004ZWab</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>AnswerQuestionsWithKnowledge_179dL000004ZWab</fullName>
+            <description>Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: “What is your return policy?” “How do I fix an issue?” or “What features does a product have?”</description>
+            <developerName>AnswerQuestionsWithKnowledge_179dL000004ZWab</developerName>
+            <invocationTarget>streamKnowledgeSearch</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>AnswerQuestionsWithKnowledge</localDeveloperName>
+            <masterLabel>Answer Questions with Knowledge</masterLabel>
+            <progressIndicatorMessage>Getting answers</progressIndicatorMessage>
+            <source>EmployeeCopilot__AnswerQuestionsWithKnowledge</source>
+        </localActions>
+        <localDeveloperName>GeneralFAQ</localDeveloperName>
+        <masterLabel>General FAQ</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>Your job is solely to help with issues and answer questions about the company, its products, procedures, or policies by searching knowledge articles.</scope>
+        <source>SvcCopilotTmpl__GeneralFAQ</source>
+    </localTopics>
+    <masterLabel>Admissions Assistant Agent</masterLabel>
+    <plannerActions>
+        <fullName>AnswerQuestionsWithKnowledge_16jdL000003G1fF</fullName>
+        <description>Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: “What is your return policy?” “How do I fix an issue?” or “What features does a product have?”</description>
+        <developerName>AnswerQuestionsWithKnowledge_16jdL000003G1fF</developerName>
+        <invocationTarget>streamKnowledgeSearch</invocationTarget>
+        <invocationTargetType>standardInvocableAction</invocationTargetType>
+        <isConfirmationRequired>false</isConfirmationRequired>
+        <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+        <localDeveloperName>AnswerQuestionsWithKnowledge</localDeveloperName>
+        <masterLabel>Answer Questions with Knowledge</masterLabel>
+        <progressIndicatorMessage>Getting answers</progressIndicatorMessage>
+        <source>EmployeeCopilot__AnswerQuestionsWithKnowledge</source>
+    </plannerActions>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>true</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <surface>SurfaceAction__Messaging</surface>
+        <surfaceType>Messaging</surfaceType>
+    </plannerSurfaces>
+    <plannerType>AiCopilot__ReAct</plannerType>
+</GenAiPlannerBundle>

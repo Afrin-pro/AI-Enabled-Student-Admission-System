@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is selected when a user requests concise summaries of student applications to streamline decision-making.</description>
+    <developerName>p_16jdL000003EQTx_Application_Summarization</developerName>
+    <genAiFunctions>
+        <functionName>KnowledgeSpaceAgent__KnowledgeSpaceSummarizeContent</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the user asks to summarize a student application, use KnowledgeSpaceAgent__KnowledgeSpaceSummarizeContent.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jdL000003EQTx_Application_Summarization</localDeveloperName>
+    <masterLabel>Application Summarization</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only generate brief and accurate summaries of student applications, highlighting key details such as academic achievements, extracurricular activities, and other relevant information. You are not able to process or evaluate application outcomes.</scope>
+</GenAiPlugin>

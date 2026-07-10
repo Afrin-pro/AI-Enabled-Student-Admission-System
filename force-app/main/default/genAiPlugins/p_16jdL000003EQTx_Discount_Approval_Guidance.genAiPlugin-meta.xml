@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is used when the user needs guidance on tuition discount approvals for applicants.</description>
+    <developerName>p_16jdL000003EQTx_Discount_Approval_Guidance</developerName>
+    <genAiFunctions>
+        <functionName>CmrcMerchCop__CreateCoupon</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the user requests guidance on tuition discounts, use CmrcMerchCop__CreateCoupon.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jdL000003EQTx_Discount_Approval_Guidance</localDeveloperName>
+    <masterLabel>Discount Approval Guidance</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only provide recommendations for tuition discount approvals based on predefined criteria and available data. You cannot approve or deny discounts directly.</scope>
+</GenAiPlugin>

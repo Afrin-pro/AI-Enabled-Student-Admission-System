@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>L3Xpbt0NDJfSsL/DfRmHT7+imgU+p9Z849UjDxneZxQ=_4</activeVersionIdentifier>
+    <developerName>Student_Enrollment_Risk_Analysis_Prompt</developerName>
+    <masterLabel>Student Enrollment Risk Analysis Prompt</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>Analyze this student enrollment and determine: 1. Probability of successful admission, based on {!$Input:studentEnrollment.AI_Priority_Score__c} (a score from 0–100, where 80 or above indicates High Priority per existing org automation) and {!$Input:studentEnrollment.Enrollment_Status__c} 
+2. Financial risk based on the discount applied: {!$Input:studentEnrollment.Discount_Percentage__c}% against the course fee {!$Input:studentEnrollment.Course__r.Course_Fee__c}
+3. Overall enrollment health: classify as Low, Medium, or High Risk 
+4. A recommendation: Approve or Reject, with a one-sentence justification
+</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>studentEnrollment</apiName>
+            <definition>SOBJECT://Student_Enrollment__c</definition>
+            <masterLabel>studentEnrollment</masterLabel>
+            <referenceName>Input:studentEnrollment</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <status>Published</status>
+        <templateFormat>FormulaExpression</templateFormat>
+        <versionIdentifier>L3Xpbt0NDJfSsL/DfRmHT7+imgU+p9Z849UjDxneZxQ=_4</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

@@ -1,0 +1,269 @@
+system:
+    instructions: "You are an AI Admissions Assistant for admissions counselors. Help counselors review student applications, summarize student information, analyze enrollment risk, recommend approval decisions, explain discount eligibility, and answer questions, using Salesforce student, enrollment, and course data."
+    messages:
+        welcome: |
+            Hi, I'm an AI assistant. How can I help you?
+        error: "Sorry, it looks like something has gone wrong."
+
+config:
+    developer_name: "Admissions_Assistant_Agent"
+    agent_label: "Admissions Assistant Agent"
+    description: "Helps admissions counselors review student applications, summarize student information, analyze enrollment risk, recommend approval decisions, explain discount eligibility, and answer questions."
+
+language:
+    default_locale: "en_US"
+    additional_locales: ""
+    all_additional_locales: False
+
+variables:
+    EndUserId: linked string
+        source: @MessagingSession.MessagingEndUserId
+        description: "This variable may also be referred to as MessagingEndUser Id"
+    RoutableId: linked string
+        source: @MessagingSession.Id
+        description: "This variable may also be referred to as MessagingSession Id"
+    ContactId: linked string
+        source: @MessagingEndUser.ContactId
+        description: "This variable may also be referred to as MessagingEndUser ContactId"
+    EndUserLanguage: linked string
+        source: @MessagingSession.EndUserLanguage
+        description: "This variable may also be referred to as MessagingSession EndUserLanguage"
+    VerifiedCustomerId: mutable string
+        description: "This variable may also be referred to as VerifiedCustomerId"
+    student_id: mutable string
+        description: "Current student identifier in context"
+    application_id: mutable string
+        description: "Optional current application identifier"
+    summary: mutable string
+        description: "Student summary compiled by the agent"
+    risk_score: mutable number
+        description: "Computed enrollment risk score (0-100)"
+    approval_recommendation: mutable string
+        description: "Recommended decision: Approve, Waitlist, or Deny"
+    discount_explanation: mutable string
+        description: "Rationale for discount/scholarship eligibility"
+    counselor_question: mutable string
+        description: "Ad-hoc counselor question about the student"
+
+access:
+    default_agent_user: "admissions_assistant_agent@00ddl00000yry101499004870.ext"
+    verified_customer_record_access:
+        use_default_objects: True
+
+knowledge:
+    rag_feature_config_id: ""
+    citations_url: ""
+    citations_enabled: False
+
+start_agent agent_router:
+    label: "Agent Router"
+    description: "Welcome the user and determine the appropriate subagent based on user input"
+    model_config:
+        model: "model://sfdc_ai__DefaultEinsteinHyperClassifier"
+    reasoning:
+        instructions: ->
+            | Select the best tool to call based on conversation history and user's intent.
+              Route only to one of: student_application_summary, enrollment_risk_analysis, discount_approval_guidance.
+
+connection:
+    # Removed invalid `salesforce_objects` block which caused compiler errors.
+subagent student_application_summary:
+    label: "Student Application Summary"
+    description: "Summarize student application details for counselors"
+    reasoning:
+        instructions: ->
+            | Summarize key details from the student's application for counselor review.
+              Include identifiers, intended program/major, term, prior education, test scores, submitted materials, and any missing items.
+              Keep the summary concise and counselor-friendly.
+        actions:
+            tool_fetch_student: @actions.get_student_by_id
+                available when @variables.student_id is not None
+                with studentId=@variables.student_id
+            tool_fetch_enrollments: @actions.list_enrollments_for_student
+                available when @variables.student_id is not None
+                with studentId=@variables.student_id
+            set_summary: @utils.setVariables
+                description: "Set or update the compiled application summary"
+                with summary=...
+            summary: @actions.summary
+                with "Input:Student_Enrollment__c" = ...
+                with outputLanguage = ...
+                with isPreviewOnly = ...
+
+
+    actions:
+        get_student_by_id:
+            description: "Fetch Student__c record by Id"
+            target: "placeholder://Get_Student_By_Id"
+            inputs:
+                studentId: string
+            outputs:
+                studentRecord: object
+        list_enrollments_for_student:
+            description: "List Student_Enrollment__c records for a student"
+            target: "placeholder://List_Enrollments_For_Student"
+            inputs:
+                studentId: string
+            outputs:
+                enrollments: list[object]
+        summary:
+            label: "summary"
+            description: |
+        
+                Use when asked to summarize or give an overview of a student's application
+            target: "generatePromptResponse://Student_Application_Summary_Prompt"
+            inputs:
+                "Input:Student_Enrollment__c": object
+                    label: "objectToSummarize"
+                    description: ""
+                    is_required: True
+                    complex_data_type_name: "lightning__recordInfoType"
+                outputLanguage: string
+                    label: "Output language"
+                    description: "Optional. Specify the response language using the appropriate two-character language code or five-character locale code (for example, en_US, en_GB, es, es_MX)."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                isPreviewOnly: boolean
+                    label: "Preview Only"
+                    description: "Resolves the prompt template without generating an LLM response."
+                    is_required: False
+                    complex_data_type_name: "lightning__booleanType"
+            outputs:
+                promptResponse: string
+                    label: "Prompt Response"
+                    description: "The prompt response generated by the action based on the specified prompt and input."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
+                generationId: string
+                    label: "Prompt Generation ID"
+                    description: "The unique identifier for the prompt generation associated with this action invocation."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
+
+subagent enrollment_risk_analysis:
+    label: "Enrollment Risk Analysis"
+    description: "Analyze likelihood of student enrollment and contributing risk factors"
+    reasoning:
+        instructions: ->
+            | Analyze the likelihood that the student will enroll, highlighting key risk and confidence factors.
+              Consider signals such as application completeness, responsiveness, visit/engagement history, scholarship status, and competing offers if available.
+              Provide a brief narrative and, if appropriate, a qualitative risk level (Low/Medium/High).
+        actions:
+            set_risk: @utils.setVariables
+                description: "Optionally store a derived qualitative risk indicator"
+                with risk_score = ...
+            risk_analysis: @actions.risk_analysis
+                with "Input:studentEnrollment" = ...
+                with outputLanguage = ...
+                with isPreviewOnly = ...
+    actions:
+        get_student_by_id:
+            description: "Fetch Student__c record by Id"
+            target: "placeholder://Get_Student_By_Id"
+            inputs:
+                studentId: string
+            outputs:
+                studentRecord: object
+        list_enrollments_for_student:
+            description: "List Student_Enrollment__c records for a student"
+            target: "placeholder://List_Enrollments_For_Student"
+            inputs:
+                studentId: string
+            outputs:
+                enrollments: list[object]
+        risk_analysis:
+            label: "risk analysis"
+            description: "Use when asked whether an enrollment is safe to approve or about risk factors"
+            target: "generatePromptResponse://Student_Enrollment_Risk_Analysis_Prompt"
+            inputs:
+                "Input:studentEnrollment": object
+                    label: "studentEnrollment"
+                    description: ""
+                    is_required: True
+                    complex_data_type_name: "lightning__recordInfoType"
+                outputLanguage: string
+                    label: "Output language"
+                    description: "Optional. Specify the response language using the appropriate two-character language code or five-character locale code (for example, en_US, en_GB, es, es_MX)."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                isPreviewOnly: boolean
+                    label: "Preview Only"
+                    description: "Resolves the prompt template without generating an LLM response."
+                    is_required: False
+                    complex_data_type_name: "lightning__booleanType"
+            outputs:
+                promptResponse: string
+                    label: "Prompt Response"
+                    description: "The prompt response generated by the action based on the specified prompt and input."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
+                generationId: string
+                    label: "Prompt Generation ID"
+                    description: "The unique identifier for the prompt generation associated with this action invocation."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
+
+subagent discount_approval_guidance:
+    label: "Discount Approval Guidance"
+    description: "Explain discount eligibility and provide approval guidance"
+    reasoning:
+        instructions: ->
+            | Explain the student's eligibility for discounts or scholarships based on available data and typical organizational rules.
+              Provide clear guidance on approval paths, thresholds, or documentation needed. Keep the guidance concise and actionable.
+              If data is missing, state the assumptions and call out what is required to proceed.
+        actions:
+            set_discount_explanation: @utils.setVariables
+                description: "Set discount/scholarship eligibility explanation and guidance"
+                with discount_explanation = ...
+            decision: @actions.decision
+                with "Input:Student_Enrollment__c" = ...
+                with outputLanguage = ...
+                with isPreviewOnly = ...
+    actions:
+        get_student_by_id:
+            description: "Fetch Student_Enrollment__c record by Id"
+            target: "placeholder://Get_Student_By_Id"
+            inputs:
+                studentId: string
+            outputs:
+                studentRecord: object
+            label: "Get Student By Id"
+        decision:
+            label: "decision"
+            description: |
+                
+                Use when asked about discount approval decisions or justification
+            target: "generatePromptResponse://Approval_Decision_Recommendation"
+            inputs:
+                "Input:Student_Enrollment__c": object
+                    label: "objectToSummarize"
+                    description: ""
+                    is_required: True
+                    complex_data_type_name: "lightning__recordInfoType"
+                outputLanguage: string
+                    label: "Output language"
+                    description: "Optional. Specify the response language using the appropriate two-character language code or five-character locale code (for example, en_US, en_GB, es, es_MX)."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                isPreviewOnly: boolean
+                    label: "Preview Only"
+                    description: "Resolves the prompt template without generating an LLM response."
+                    is_required: False
+                    complex_data_type_name: "lightning__booleanType"
+            outputs:
+                promptResponse: string
+                    label: "Prompt Response"
+                    description: "The prompt response generated by the action based on the specified prompt and input."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
+                generationId: string
+                    label: "Prompt Generation ID"
+                    description: "The unique identifier for the prompt generation associated with this action invocation."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
