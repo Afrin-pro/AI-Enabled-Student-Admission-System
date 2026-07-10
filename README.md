@@ -1,58 +1,138 @@
-# Salesforce DX Project
+# AI-Enabled Student Admission System
 
-Salesforce DX is a development approach that brings source-driven development, team collaboration, and continuous integration to the Salesforce Platform. Instead of working directly in an org through a web browser, you work with metadata as source files in a local DX project, track changes in version control, and deploy through automated processes.
+> A Salesforce-native admissions platform combining declarative automation with a Generative AI agent — built as part of the SmartBridge VIP Program (AICTE-affiliated).
 
-This project template gets you started with the tools and structure you need to build Salesforce applications using source control, scratch orgs, and the Salesforce CLI.
+## Overview
 
-## Prerequisites
+This project reimagines the student admissions workflow on Salesforce. It pairs traditional declarative automation (Screen Flows, Duplicate & Matching Rules) with **Admissions Assistant Agent**, a Generative AI agent built on Salesforce Agentforce that helps counselors and admissions managers summarize applications, assess enrollment risk, and evaluate discount requests — grounded in live, real-time Salesforce data rather than static or hallucinated responses.
 
-Before you start, make sure you have:
+Developed milestone-by-milestone in a Salesforce Developer Edition org (`studentAdmissionOrg`).
 
-- **Salesforce CLI** - Download from [developer.salesforce.com/tools/salesforcecli](https://developer.salesforce.com/tools/salesforcecli). See [Install Salesforce CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm) for details.
-- **VS Code with Salesforce Extension Pack** - See [Installation Instructions](https://developer.salesforce.com/docs/platform/sfvscode-extensions/guide/install.html) for details. Includes the Agentforce Vibes extension.
-- **A development org** - Sign up for a free Developer Edition org [here](https://developer.salesforce.com/signup).
-- **Dev Hub enabled** (optional, required to create scratch orgs) - You can enable Dev Hub in your development org under Setup > Dev Hub.  See [Provide Developers Access to Salesforce DX Tools](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_setup_dx_tools.htm).
+## Program Context
+
+- **Program:** SmartBridge Virtual Internship Program (VIP)
+- **Affiliation:** AICTE
+- **Delivery model:** Milestone-based, with metadata version-controlled in Git and documented per milestone for evaluator review
+
+## Core Data Model
+
+| Object | Purpose | Relationship |
+|---|---|---|
+| `Student__c` | Student master record | Master in Master-Detail to `Student_Enrollment__c` |
+| `Course__c` | Course catalog record | Master in Master-Detail to `Student_Enrollment__c` |
+| `Student_Enrollment__c` | Application/enrollment record — links a student to a course, tracks course fee, discount, final payable amount, enrollment status, and AI priority score | Detail object |
+
+## Key Features
+
+### 1. Student Enrollment Screen Flow
+Counselor-facing Screen Flow for enrolling students into courses, with automatic discount calculation, formula-field resolution, and post-create record retrieval to surface computed values.
+
+### 2. Duplicate & Matching Rules
+Prevents duplicate enrollments using a custom text-based match key (`Enrollment_Match_Key__c`), populated by a Before-Save Record-Triggered Flow that concatenates Student and Course Ids — a workaround for Salesforce's native one-lookup-field-per-Matching-Rule limitation and the fact that formula fields aren't available in Matching Rule criteria.
+
+### 3. Admissions Assistant Agent (Agentforce)
+An AI agent built in Salesforce's Agentforce Builder, made up of three purpose-built subagents, each grounded in live Salesforce data via the standard **Query Records** action and backed by an activated Prompt Builder template:
+
+| Subagent | Function |
+|---|---|
+| **Student Application Summary** | Plain-language summary of an enrollment — student, course, fees, discount, status, AI priority score, and flagged risks |
+| **Enrollment Risk Analysis** | Assesses admission probability and financial risk from the discount applied; classifies overall enrollment health as Low, Medium, or High Risk |
+| **Student Enrollment Discount Evaluation** | Evaluates whether a specific discount amount should be approved, escalated, or rejected |
+
+A general-purpose **General FAQ** subagent handles anything outside these three, with classification descriptions tuned to avoid overlap between subagents.
+
+### 4. AI Trust & Governance
+Data Masking, Zero Data Retention, and Audit Logging enabled via Salesforce's AI Trust & Permissions layer before any Agentforce feature was activated. Agent access is scoped through dedicated permission sets (Admissions Counselors, Admissions Managers) with Enabled Agent Access explicitly granted.
+
+## Tech Stack
+
+- Salesforce Developer Edition (Lightning Experience)
+- Agentforce Builder — Subagents, Prompt Builder, Query Records grounding
+- Flow Builder — Screen Flows, Record-Triggered Flows
+- Salesforce CLI (`sf`) + Salesforce Extensions for VS Code
+- Git / GitHub
 
 ## Project Structure
 
-Your DX project follows this structure:
+```
+├── .husky/                    # Git hooks (pre-commit formatting/linting)
+├── .vscode/                   # VS Code workspace settings
+├── Demo-Video/                # Project demo video (recording or link to hosted walkthrough)
+├── Docs/                      # Per-milestone screenshots for evaluators
+│   └── screenshots/
+│       └── phase<N>/
+├── Documentation/             # Full consolidated project documentation — all phases & milestones
+├── config/                    # Scratch org definition files
+├── force-app/main/default/    # Salesforce metadata — objects, flows, Agentforce components, etc.
+├── scripts/                   # Utility scripts (Apex/SOQL helpers)
+├── .forceignore
+├── .gitignore
+├── .prettierignore
+├── .prettierrc
+└── sfdx-project.json
+```
 
-- **`force-app/main/default/`** - Your metadata source files live in this default package directory. You can configure additional package directories in the `sfdx-project.json` file.
-- **`config/`** - Scratch org definitions and project settings
-- **`scripts/`** - Automation scripts for common tasks
-- **`sfdx-project.json`** - Project manifest that defines package directories, namespace, API version, and other project-level settings
+## Getting Started
 
-See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm).
+```bash
+# Clone the repo
+git clone https://github.com/Afrin-pro/AI-Enabled-Student-Admission-System.git
+cd AI-Enabled-Student-Admission-System
 
-## Get Started
+# Authorize your Salesforce org
+sf org login web --alias studentAdmissionOrg --set-default
 
-Ready to start developing? The [Get Started with Salesforce DX](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_get_started_dx.htm) guide walks you through your first project, from creating a scratch org to creating a simple Apex class or LWC to deploying your code to a sandbox.
+# Deploy metadata to your org
+sf project deploy start --target-org studentAdmissionOrg
+```
 
-## Common Salesforce CLI Commands
+## Project Roadmap
 
-Here are common CLI commands that you'll use the most:
+### Phase 2: Salesforce Development — Backend & Configuration
+- [x] M1: Salesforce Account
+- [x] M2: Objects Creation
+- [x] M3: Tabs
+- [x] M4: Fields & Relationships
+- [x] M5: Validation Rules
+- [x] M6: Approval Process
+- [x] M7: Email Templates
+- [x] M8: Email Alerts
+- [x] M9: Declarative Automation (Flows) — Student Enrollment Screen Flow, Duplicate/Matching Rule automation via Before-Save Record-Triggered Flow
+- [x] M10: Agentforce AI — Admissions Assistant Agent, 3 subagents, Prompt Builder templates, Query Records grounding, deployed to Lightning Experience
 
-- `sf org login web`: Authorize an org
-- `sf org open`: Open your org in a browser
-- `sf org create scratch`: Create a scratch org
-- `sf project deploy start`: Deploy metadata to your org
-- `sf project retrieve start`: Retrieve metadata from your org
-- `sf template generate <artifact>`: Scaffold new components, such as Apex classes and triggers, LWC components, Lightning apps, and more
-- `sf apex <command>`: Run Apex tests, run anonymous Apex blocks, and view logs
-- `sf data <command>`: Work with test data
-- `sf alias <command>`: Manage org aliases
-- `sf config <command>`: Configure CLI settings
+### Phase 3: UI/UX Development & Customization
+- [x] M11: The Lightning Page
+- [x] M12: Editing of Page Layouts
+- [x] M13: Dynamic Forms
+- [x] M14: Users
 
-## Use Agentforce Vibes to Build Lightning Apps
+### Phase 4: Data Migration, Testing & Security
+- [x] M15: Duplicate and Matching Rules
+- [x] M16: Profiles
+- [x] M17: Roles and Role Hierarchy
 
-Transform your ideas into custom Lightning apps that extend CRM workflows directly in Lightning Experience. Through natural conversations with Agentforce Vibes, implement custom objects and fields, complex business logic, and dynamic UI components. See [Build a Lightning App Using Agentforce Vibes](https://developer.salesforce.com/docs/platform/einstein-for-devs/guide/lexapp-overview.html).
+### Phase 5: Deployment, Documentation & Maintenance
+- [x] Deployment
+- [x] Monitoring & post Deployment Support
 
-## Additional Resources
 
-- [Agentforce Vibes Developer Guide](https://developer.salesforce.com/docs/platform/einstein-for-devs/guide/einstein-overview.html)
-- [Salesforce CLI Installation Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
-- [Salesforce CLI Plugin Development Guide](https://developer.salesforce.com/docs/platform/salesforce-cli-plugin/guide/conceptual-overview.html)
-- [Salesforce VS Code Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
 
+## Documentation & Demo
+
+- 📄 **Full project documentation:** [`Documentation/`](./Documentation) — consolidated writeup covering all phases and milestones, intended as the single reference document for evaluators.
+- 🖼️ **Per-milestone screenshots:** [`Docs/screenshots/phase<N>/`](./Docs) — visual, milestone-by-milestone walkthrough.
+- 🎥 **Demo video:** [`Demo-Video/`](./Demo-Video) — _[add link or file once recorded]_. Recommended: a short walkthrough of the Admissions Assistant Agent responding to a real `Student_Enrollment__c` record in Lightning Experience, showing all three subagents routing correctly.
+
+
+
+## Branching Strategy
+
+Each milestone is developed on its own branch, then merged into `main` once complete:
+```
+phase<N>-m<N>-short-name
+```
+Example: `phase2-m10-admissions-agent`
+
+## Author
+
+**Afrin** — B.Tech Computer Science (2027), SmartBridge VIP Program participant
