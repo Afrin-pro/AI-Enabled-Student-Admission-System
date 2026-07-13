@@ -121,17 +121,10 @@ sf project deploy start --target-org studentAdmissionOrg
 
 - 📄 **Full project documentation:** [`Documentation/`](./Documentation) — consolidated writeup covering all phases and milestones, intended as the single reference document for evaluators.
 - 🖼️ **Per-milestone screenshots:** [`Docs/screenshots/phase<N>/`](./Docs) — visual, milestone-by-milestone walkthrough.
-- 🎥 **Demo video:** [`Demo-Video/`](./Demo-Video) — _[add link or file once recorded]_. Recommended: a short walkthrough of the Admissions Assistant Agent responding to a real `Student_Enrollment__c` record in Lightning Experience, showing all three subagents routing correctly.
+- 🎥 **Demo video:** [`Demo-Video/`](./Demo-Video) — _[https://youtu.be/J4AXr-zjHpI]_. 
 
 
 
-## Branching Strategy
-
-Each milestone is developed on its own branch, then merged into `main` once complete:
-```
-phase<N>-m<N>-short-name
-```
-Example: `phase2-m10-admissions-agent`
 
 ## Author
 
