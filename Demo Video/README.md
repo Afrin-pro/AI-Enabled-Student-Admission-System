@@ -14,7 +14,7 @@ A walkthrough of the AI-Enabled Student Admission System, built for the SmartBri
 
 ## Access
 
-This is an **unlisted** YouTube video — not searchable, accessible only via the direct link above. Safe to share with evaluators.
+This is an **unlisted** YouTube video — not searchable, accessible only via the direct link above. 
 
 ---
 *Recorded as part of the SmartBridge VIP Program capstone submission.*
